@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' https://assets.mixkit.co data: blob:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+    <meta name="referrer" content="no-referrer">
+    <title>SISTEMA - ASCENSÃO FITNESS V33.1 BETA</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="json/manifest.json">
+    <meta name="theme-color" content="#030712">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- 🌌 MODAL INICIAL & CADASTRO -->
+    <div id="sistema-modal" class="modal-sistema">
+        <div id="efeito-alerta" class="alerta-vermelho"></div>
+        <div id="efeito-portal" class="portal-dungeon"></div>
+        <div id="efeito-clarao" class="clarao-despertar-neon escondido"></div>
+
+        <!-- ETAPA 1: Pergunta Inicial (Centralizada) -->
+        <div id="janela-inicio" class="janela-sistema janela-inicio-ampla">
+            <div class="sistema-header">⚠️ [AVISO DO SISTEMA DE DESPERTAR] ⚠️</div>
+            <div class="sistema-body-inicio">
+                <p class="texto-aviso-grande">Você foi selecionado como um jogador do Sistema.</p>
+                <p class="subtexto-aviso">Deseja inicializar a sincronização do seu corpo e despertar seus poderes?</p>
+            </div>
+            <div class="sistema-footer-inicio">
+                <button type="button" id="btn-sim-inicial" class="btn-sistema btn-sim btn-inicio-lg">[ SIM ]</button>
+                <button type="button" id="btn-nao-inicial" class="btn-sistema btn-nao btn-inicio-lg">[ NÃO ]</button>
+            </div>
+            <div style="text-align:center; margin-top:14px;">
+                <button type="button" id="btn-inicial-importar" class="btn-link-importar">📂 Já tenho um save — importar</button>
+            </div>
+        </div>
+
+        <!-- ETAPA 2: Aviso de Desistência -->
+        <div id="janela-desistencia" class="janela-sistema escondido">
+            <div class="sistema-header header-alerta">🚨 [ALERTA DE PENALIDADE] 🚨</div>
+            <div class="sistema-body">
+                <p>Tem certeza? Você perderá a oportunidade de despertar seus poderes e se tornar o caçador mais forte.</p>
+            </div>
+            <div class="sistema-footer">
+                <button type="button" id="btn-voltar" class="btn-sistema btn-voltar">[ VOLTAR ]</button>
+                <button type="button" id="btn-sair" class="btn-sistema btn-sair">[ SAIR MESMO ASSIM ]</button>
+            </div>
+        </div>
+
+        <!-- ETAPA 3: Formulário de Cadastro Inicial -->
+        <div id="janela-cadastro" class="janela-sistema escondido janela-larga-restaurada">
+            <div class="sistema-header">📜 [REGISTRO DE CAÇADOR - DESPERTAR V33.1 BETA]</div>
+
+            <div class="sistema-body-amplo">
+                <p class="instrucao-form-amplo">Insira seus dados para recalibrar o Sistema ao seu corpo:</p>
+                <p class="instrucao-form-amplo" style="color:#94a3b8; font-size:0.85rem;">🧪 Os números abaixo são só uma estimativa. Nos 3 primeiros dias o Sistema faz uma <b>calibração</b> (sem XP e sem penalidade) para achar o seu nível real.</p>
+
+                <div class="secao-cadastro-bloco">
+                    <h4 class="subtitulo-bloco">👤 DADOS DE IDENTIFICAÇÃO</h4>
+                    <div class="grid-form-amplo">
+                        <div class="form-group-amplo">
+                            <label>Nome de Caçador:</label>
+                            <input type="text" id="cad-nome" maxlength="30" placeholder="Ex: Soberano do Eclipse">
+                        </div>
+                        <div class="form-group-amplo">
+                            <label>Gênero (define o avatar do seu Caçador):</label>
+                            <select id="cad-genero">
+                                <option value="masculino">♂️ Masculino</option>
+                                <option value="feminino">♀️ Feminino</option>
+                                <option value="nao_informar">Prefiro não responder (avatar masculino padrão)</option>
+                            </select>
+                        </div>
+                        <div class="form-group-amplo">
+                            <label>Altura (cm):</label>
+                            <input type="number" id="cad-altura" placeholder="Ex: 178">
+                        </div>
+                        <div class="form-group-amplo">
+                            <label>Peso Corporal (kg):</label>
+                            <input type="number" id="cad-peso" placeholder="Ex: 75">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🩺 TRIAGEM DE CAPACIDADE (NOVO V29) -->
+                <div class="secao-cadastro-bloco">
+                    <h4 class="subtitulo-bloco">🩺 TRIAGEM DE CAPACIDADE FÍSICA</h4>
+                    <p class="nota-triagem">Responda com sinceridade. Se marcar [NÃO], o Sistema usa uma variação de menor impacto (Modo Adaptado) com <b>-50% de XP</b> naquele exercício, para você progredir com segurança.</p>
+                    <div class="grid-form-amplo">
+                        <div class="form-group-amplo">
+                            <label>Consegue fazer Flexão normal (mãos e pontas dos pés)?</label>
+                            <select id="cad-pode-flexao">
+                                <option value="sim">✅ SIM</option>
+                                <option value="nao">❌ NÃO (usar Flexão com Joelho)</option>
+                            </select>
+                        </div>
+                        <div class="form-group-amplo">
+                            <label>Consegue fazer Agachamento livre?</label>
+                            <select id="cad-pode-agach">
+                                <option value="sim">✅ SIM</option>
+                                <option value="nao">❌ NÃO (usar Agachamento no Banco)</option>
+                            </select>
+                        </div>
+                        <div class="form-group-amplo">
+                            <label>Consegue fazer Abdominal completo?</label>
+                            <select id="cad-pode-abd">
+                                <option value="sim">✅ SIM</option>
+                                <option value="nao">❌ NÃO (usar Abdominal Curto/Crunch)</option>
+                            </select>
+                        </div>
+                        <div class="form-group-amplo">
+                            <label>Consegue correr de forma contínua (cardio de impacto)?</label>
+                            <select id="cad-pode-correr">
+                                <option value="sim">✅ SIM</option>
+                                <option value="nao">❌ NÃO (somente Caminhada ou Bicicleta)</option>
+                            </select>
+                        </div>
+                        <div class="form-group-amplo">
+                            <label>Modalidade de Cardio escolhida:</label>
+                            <select id="cad-cardio-tipo">
+                                <option value="corrida">🏃 Corrida (por Km)</option>
+                                <option value="caminhada">🚶 Caminhada (por Km)</option>
+                                <option value="bicicleta">🚴 Bicicleta (por tempo - min)</option>
+                                <option value="corda">🪢 Pular Corda (por tempo - min)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="secao-cadastro-bloco">
+                    <h4 class="subtitulo-bloco">⚡ CONDICIONAMENTO FÍSICO ATUAL (MÁXIMOS)</h4>
+                    <div class="grid-form-amplo">
+                        <div class="form-group-amplo">
+                            <label id="lbl-cad-flex">Máx. Flexões seguidas:</label>
+                            <input type="number" id="cad-max-flexoes" value="10">
+                        </div>
+                        <div class="form-group-amplo">
+                            <label id="lbl-cad-abd">Máx. Abdominais seguidos:</label>
+                            <input type="number" id="cad-max-abdominais" value="30">
+                        </div>
+                        <div class="form-group-amplo">
+                            <label id="lbl-cad-agach">Máx. Agachamentos seguidos:</label>
+                            <input type="number" id="cad-max-agachamentos" value="30">
+                        </div>
+                        <div class="form-group-amplo">
+                            <label id="lbl-cad-cardio">Máx. Corrida contínua (Km):</label>
+                            <input type="number" step="0.1" id="cad-max-corrida" value="2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sistema-footer-amplo">
+                <button type="button" id="btn-concluir-cadastro" class="btn-sistema btn-sim btn-despertar-grande">
+                    ⚡ [ CONCLUIR E DESPERTAR ] ⚡
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 🌐 CONTEÚDO PRINCIPAL DO APP -->
+    <!-- CALIBRAÇÃO INICIAL (BETA): só aparece para cadastros novos, nos 3 primeiros dias -->
+    <div id="janela-calibracao" class="calib-wrap escondido">
+        <div id="calib-conteudo"></div>
+    </div>
+
+    <div id="app-principal" class="app-container escondido">
+
+        <header class="sistema-header-main">
+            <div class="status-top">
+                <span class="alerta-tag" id="tag-status-sistema">⚠️ [SISTEMA ATIVO - STATUS DE CAÇADOR]</span>
+                <span id="data-sistema">--/--/----</span>
+            </div>
+            <h1 id="titulo-interface-app">INTERFACE DO CAÇADOR</h1>
+
+        </header>
+
+        <div class="grid-layout">
+
+            <!-- PERFIL -->
+            <section class="card-painel perfil-card">
+                <div class="avatar-container">
+                    <div id="avatar-icone" class="avatar-quadro" title="Toque para trocar a moldura e a aparência">
+                        <div class="avatar-janela"><img id="avatar-img" class="avatar-img" alt="Avatar do Caçador" draggable="false"></div>
+                        <div id="avatar-moldura" class="avatar-moldura-sobre"></div>
+                    </div>
+                </div>
+
+                <div class="user-info">
+                    <h2 id="user-nome">Caçador</h2>
+
+                    <div class="seletor-titulo-container">
+                        <select id="select-titulo-equipado" class="dropdown-titulo">
+                            <option value="[ O Desperto ]">[ O Desperto ]</option>
+                        </select>
+                        <div id="desc-titulo-equipado" class="desc-item-mini"></div>
+                        <div id="habilidade-titulo" class="habilidade-titulo escondido"></div>
+                    </div>
+
+                    <div class="streak-box">
+                        🔥 <strong><span id="streak-dias">0</span> DIAS CONSECUTIVOS</strong>
+                    </div>
+
+                    <div style="font-size: 0.9rem; color: #eab308; margin-bottom: 6px; font-weight: bold;">
+                        💰 OURO DO SISTEMA: <span id="user-gold">0</span> G
+                    </div>
+
+                    <div class="soro-box" style="font-size: 0.85rem; color: #a855f7; margin-bottom: 8px;" title="Soro de Recuperação: salva um dia em que algo deu errado, mantendo Streak e XP do dia.">
+                        🧪 SOROS DE RECUPERAÇÃO: <strong id="qtd-soros">1</strong>
+                        <div class="desc-item-mini">Salva um dia que deu errado (mantém Streak e XP). Use na Bolsa.</div>
+                    </div>
+
+                    <div class="rank-box">
+                        <span class="rank-badge" id="rank-badge">RANK E</span>
+                        <button type="button" id="btn-ver-ranks" class="btn-rank-info">📊 Ranks ➔</button>
+                    </div>
+                </div>
+
+                <div class="metrica-fisica">
+                    <span>📏 <b id="user-altura">0</b> cm</span> |
+                    <span>⚖️ <b id="user-peso">0</b> kg</span>
+                </div>
+
+                <hr class="divisor-neon">
+
+                <!-- 🛡️ BARRA DE FADIGA -->
+                <div class="fadiga-container">
+                    <div class="xp-header">
+                        <span style="color:#f97316;">🛡️ FADIGA CORPORAL</span>
+                        <span id="fadiga-texto" style="color:#f97316;">0%</span>
+                    </div>
+                    <div class="xp-bar-bg" style="border-color:#f97316;">
+                        <div class="xp-bar-fill" id="fadiga-fill" style="background: linear-gradient(90deg, #22c55e, #f59e0b, #ef4444); width: 0%;"></div>
+                    </div>
+                    <div id="alerta-fadiga" class="alerta-fadiga escondido"></div>
+                </div>
+
+                <hr class="divisor-neon">
+
+                <div class="xp-container">
+                    <div class="xp-header">
+                        <span>PROGRESSO DO RANK ATUAL</span>
+                        <span id="xp-texto">0 / 5000 XP</span>
+                    </div>
+                    <div class="xp-bar-bg">
+                        <div class="xp-bar-fill" id="xp-fill"></div>
+                    </div>
+                </div>
+
+                <div class="atributos-container" style="margin-top:15px;">
+                    <h3>ATRIBUTOS DO CORPO & MENTE</h3>
+                    <div class="atributo-linha"><span>💪 FORÇA: <b id="attr-forca">10</b></span></div>
+                    <div class="atributo-linha"><span>⚡ AGILIDADE: <b id="attr-agilidade">10</b></span></div>
+                    <div class="atributo-linha"><span>🧘 VITALIDADE: <b id="attr-vitalidade">10</b></span></div>
+                    <div class="atributo-linha"><span>🛡️ RESISTÊNCIA: <b id="attr-resistencia">10</b></span></div>
+                    <div class="atributo-linha" style="border-left-color: #38bdf8;"><span>🧠 INTELIGÊNCIA: <b id="attr-inteligencia">10</b></span></div>
+                </div>
+
+                <hr class="divisor-neon">
+
+                <!-- 💧 META RECOMENDADA DE HIDRATAÇÃO -->
+                <div class="hidratacao-container">
+                    <h3 style="color:#38bdf8; font-size:0.95rem; font-family:'Orbitron', sans-serif;">💧 INGESTÃO DIÁRIA DE ÁGUA (RECOMENDADO)</h3>
+                    <div style="font-size:0.85rem; color:#cbd5e1; margin-top:5px;">
+                        Progresso: <b id="agua-atual-texto" style="color:#38bdf8;">0.0</b> / <b id="agua-meta-texto">3.0</b> Litros
+                        <span id="badge-agua-bonus" class="badge-opcional-concluido escondido">✔ +200 XP +100 GOLD</span>
+                    </div>
+                    <div class="xp-bar-bg" style="margin-top:6px; height:8px; border-color:#38bdf8;">
+                        <div class="xp-bar-fill" id="agua-bar-fill" style="width:0%; background: linear-gradient(90deg, #0284c7, #38bdf8);"></div>
+                    </div>
+                    <div style="display:flex; gap:6px; margin-top:8px;">
+                        <button type="button" class="btn-dev-acao" style="flex:1; border-color:#38bdf8; color:#38bdf8;" onclick="adicionarAgua(0.25)">+250ml</button>
+                        <button type="button" class="btn-dev-acao" style="flex:1; border-color:#38bdf8; color:#38bdf8;" onclick="adicionarAgua(0.50)">+500ml</button>
+                        <button type="button" class="btn-dev-acao" style="flex:0.8; border-color:#ef4444; color:#ef4444;" onclick="resetarAgua()">Reset</button>
+                    </div>
+                </div>
+
+                <hr class="divisor-neon">
+
+                <!-- 🗡️ EQUIPAMENTO ATIVO & LOJA DO SISTEMA -->
+                <div class="equipamento-container">
+                    <h3 style="color:#eab308; font-size:0.95rem; font-family:'Orbitron', sans-serif;">🗡️ EQUIPAMENTOS</h3>
+                    <div id="slot-item-equipado" class="slot-item-empty">
+                        Nenhum artefato equipado
+                    </div>
+                    <div style="display:flex; gap:6px; margin-top:8px;">
+                        <button type="button" id="btn-abrir-inventario" class="btn-inventario" style="flex:1;">[ 🎒 BOLSA ]</button>
+                        <button type="button" id="btn-abrir-loja" class="btn-inventario" style="flex:1; border-color:#22c55e; color:#22c55e;">[ 🏪 LOJA ]</button>
+                    </div>
+                </div>
+
+                <hr class="divisor-neon">
+
+                <!-- 🗺️ MAPA DE MASMORRAS & MASMORRA TEMPORÁRIA -->
+                <div class="mapa-container">
+                    <h3 style="color:#38bdf8; font-size:0.95rem; font-family:'Orbitron', sans-serif;">🗺️ MAPA & MASMORRAS</h3>
+                    <button type="button" id="btn-abrir-mapa" class="btn-inventario" style="border-color:#38bdf8; color:#38bdf8; margin-top:6px;">[ 🌍 MAPA MUNDIAL ]</button>
+                    <button type="button" id="btn-usar-chave-masmorra" class="btn-inventario" style="border-color:#a855f7; color:#a855f7; margin-top:6px;">[ 🔑 USAR CHAVE DE MASMORRA ]</button>
+                </div>
+
+                <hr class="divisor-neon">
+
+                <!-- 🧰 FERRAMENTAS V31 -->
+                <div class="ferramentas-container">
+                    <h3 style="color:#00d2ff; font-size:0.95rem; font-family:'Orbitron', sans-serif;">🧰 PAINEL DO CAÇADOR</h3>
+                    <div class="ferramentas-grade">
+                        <button type="button" id="btn-abrir-arvore" class="btn-inventario btn-ferr" style="border-color:#22c55e; color:#22c55e;">🌳 ÁRVORE <span id="badge-arvore" class="badge-pontos escondido">0</span></button>
+                        <button type="button" id="btn-abrir-stats" class="btn-inventario btn-ferr" style="border-color:#38bdf8; color:#38bdf8;">📊 ESTATÍSTICAS</button>
+                        <button type="button" id="btn-abrir-retro" class="btn-inventario btn-ferr" style="border-color:#a855f7; color:#a855f7;">📖 RETROSPECTIVA</button>
+                        <button type="button" id="btn-abrir-molduras" class="btn-inventario btn-ferr" style="border-color:#eab308; color:#eab308;">🖼️ MOLDURAS</button>
+                        <button type="button" id="btn-abrir-variacoes" class="btn-inventario btn-ferr" style="border-color:#14b8a6; color:#2dd4bf;">🧬 VARIAÇÕES</button>
+                        <button type="button" id="btn-modo-recuperacao" class="btn-inventario btn-ferr" style="border-color:#22c55e; color:#86efac;">🩹 MODO RECUPERAÇÃO</button>
+                        <button type="button" id="btn-abrir-config" class="btn-inventario btn-ferr" style="border-color:#94a3b8; color:#cbd5e1;">⚙️ CONFIGURAÇÕES</button>
+                    </div>
+                </div>
+
+                <hr class="divisor-neon">
+
+                <!-- 👤 EXÉRCITO DE SOMBRAS -->
+                <div class="sombras-container">
+                    <h3 style="color:#a855f7; font-size:0.95rem; font-family:'Orbitron', sans-serif;">👥 EXÉRCITO DE SOMBRAS</h3>
+                    <div id="lista-sombras" style="font-size:0.8rem; color:#94a3b8; margin-top:5px;">
+                        Nenhuma sombra convocada ainda.
+                    </div>
+                    <button type="button" id="btn-abrir-galeria-sombras" class="btn-inventario" style="border-color:#a855f7; color:#c084fc; margin-top:8px;">[ 🌑 GALERIA DAS SOMBRAS ]</button>
+                </div>
+            </section>
+
+            <!-- MISSÕES DIÁRIAS, BOSS FIGHTS & QUESTS -->
+            <section class="main-content">
+
+                <!-- CARD DE QUEST DE MUDANÇA DE CLASSE -->
+                <div id="card-job-change" class="card-painel escondido" style="border-color: #a855f7; background: rgba(168, 85, 247, 0.15);">
+                    <div class="card-header" style="border-bottom-color: #a855f7;">
+                        <h3 style="color: #a855f7;">🩸 QUEST DE MUDANÇA DE CLASSE DISPONÍVEL!</h3>
+                        <span class="status-boss" style="background: rgba(168,85,247,0.3); color:#a855f7; border-color:#a855f7;">PROVA DE FOGO</span>
+                    </div>
+                    <p style="font-size:0.85rem; color:#e9d5ff; margin-bottom:12px;">Seu Rank C permite realizar a Prova de Fogo! Conclua 3 dias seguidos de treino com 100% das metas para desbloquear Títulos de Classe e Habilidades Supremas!</p>
+                    <div style="text-align: center;">
+                        <span style="font-size:0.9rem; color:#fff; font-weight:bold;">Progresso: <span id="job-progress-dias">0</span>/3 Dias Perfazer</span>
+                    </div>
+                </div>
+
+                <!-- CARD DE MASMORRA TEMPORÁRIA -->
+                <div id="card-masmorra-temp" class="card-painel escondido" style="border-color: #00d2ff; background: rgba(0, 210, 255, 0.1);">
+                    <div class="card-header" style="border-bottom-color: #00d2ff;">
+                        <h3 id="temp-dungeon-nome" style="color: #00d2ff;">⏳ FENDA TEMPORÁRIA DETECTADA</h3>
+                        <span class="status-boss" style="background: rgba(0,210,255,0.3); color:#00d2ff; border-color:#00d2ff;">DESAFIO OPCIONAL</span>
+                    </div>
+                    <p id="temp-dungeon-desc" style="font-size:0.85rem; color:#cbd5e1; margin-bottom:10px;"></p>
+
+                    <div id="caixa-convite-temp" style="text-align: center; margin-bottom: 10px;">
+                        <p style="font-size:0.8rem; color:#eab308; margin-bottom:8px;">⚠️ Metas reduzidas em ~35% para não sobrecarregar você! Se recusar, NÃO perderá nada de XP.</p>
+                        <div style="display:flex; gap:10px;">
+                            <button type="button" id="btn-aceitar-masmorra-temp" class="btn-concluir-verde">[ ⚔️ ACEITAR DESAFIO ]</button>
+                            <button type="button" id="btn-recusar-masmorra-temp" class="btn-nao-vermelho">[ ✖️ RECUSAR SEM PERDAS ]</button>
+                        </div>
+                    </div>
+
+                    <div id="caixa-timer-temp" class="escondido">
+                        <div style="text-align: center; font-size:1.1rem; font-family:'Orbitron', sans-serif; color:#ef4444; margin-bottom:12px;">
+                            ⏱️ TEMPO RESTANTE DA RAID: <span id="timer-masmorra-temp">02:00:00</span>
+                        </div>
+
+                        <div class="lista-missoes" id="container-missoes-temp" style="margin-bottom: 12px;"></div>
+
+                        <div style="display:flex; gap:10px;">
+                            <button type="button" id="btn-concluir-masmorra-temp" class="btn-erga-se-fogo" style="flex:2;">[ 🏆 FINALIZAR E OBTENHA RECOMPENSAS ]</button>
+                            <button type="button" id="btn-cancelar-raid-temp" class="btn-nao-vermelho" style="flex:1;">[ 🚪 CANCELAR RAID ]</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🩹 MODO RECUPERAÇÃO -->
+                <div id="card-recuperacao" class="card-painel escondido" style="border-color:#22c55e; background:rgba(34,197,94,0.08);">
+                    <div class="card-header" style="border-bottom-color:#22c55e;"><h3 style="color:#22c55e;">🩹 MODO RECUPERAÇÃO ATIVO</h3></div>
+                    <p id="rec-info" style="font-size:0.85rem; color:#bbf7d0; margin-bottom:10px;"></p>
+                    <button type="button" id="btn-encerrar-recuperacao" class="btn-sistema" style="width:100%; border-color:#22c55e; color:#22c55e;">[ ENCERRAR RECUPERAÇÃO ]</button>
+                </div>
+
+                <!-- CARD DE RUPTURA DE PORTAL -->
+                <div id="card-ruptura-portal" class="card-painel ruptura-card escondido" style="border-color: #f97316; background: rgba(249, 115, 22, 0.15);">
+                    <div class="card-header" style="border-bottom-color: #f97316;">
+                        <h3 id="ruptura-titulo" style="color: #f97316;">🕳️ ALERTA: RUPTURA DE PORTAL NA REGIÃO!</h3>
+                        <span id="ruptura-tag" class="status-boss" style="background: rgba(249,115,22,0.3); color:#f97316; border-color:#f97316;">EVENTO SURPRESA</span>
+                    </div>
+                    <p style="font-size:0.85rem; color:#fdba74; margin-bottom:12px;">Monstros escaparam para as ruas! Realize o mini-desafio de emergência abaixo imediatamente para conter a ruptura:</p>
+                    <div style="text-align: center;">
+                        <div class="ruptura-relogio">⏳ TEMPO ATÉ A RUPTURA SE FECHAR: <span id="timer-ruptura" class="timer-ruptura">00:30:00</span></div>
+                        <p id="texto-desafio-ruptura" style="font-weight: bold; color: #fff; margin-bottom: 10px; font-size: 1.05rem;"></p>
+                        <button type="button" id="btn-concluir-ruptura" class="btn-concluir-verde" style="background-color: #c2410c; border-color: #f97316;">⚡ [ CONTER RUPTURA IMEDIATAMENTE ]</button>
+                    </div>
+                </div>
+
+                <!-- CARD BOSS FIGHT MENSAL -->
+                <div id="card-boss-fight" class="card-painel boss-card escondido">
+                    <div class="card-header border-boss">
+                        <h3 id="boss-nome">👹 INSTÂNCIA: PORTAL DE CHEFÃO</h3>
+                        <span class="status-boss" id="boss-status-tag">EVENTO MENSAL</span>
+                    </div>
+                    <p id="boss-desc" style="font-size:0.85rem; color:#fca5a5; margin-bottom:10px;"></p>
+
+                    <div id="boss-contador-box" class="boss-contador-box escondido">
+                        <div class="boss-contador-titulo">⏳ TEMPO RESTANTE DO PORTAL</div>
+                        <div id="boss-contador" class="boss-contador">48:00:00</div>
+                        <div class="boss-contador-aviso">⚔️ Você tem <b>2 DIAS (sábado e domingo)</b> para completar a meta. O progresso fica salvo e <b>não há perda de XP</b> se você não terminar tudo no primeiro dia. Se o relógio chegar a zero, o Portal é bloqueado por <b>1 mês</b> e você perde o XP total dos exercícios.</div>
+                    </div>
+
+                    <div id="caixa-confirmacao-boss" style="margin-bottom: 12px; text-align: center;">
+                        <button type="button" id="btn-aceitar-boss" class="btn-erga-se-fogo" style="padding: 10px; font-size: 0.95rem;">⚔️ FAZER A RAID (ENTRAR NA MASMORRA)</button>
+                        <button type="button" id="btn-pedra-boss-pre" class="btn-teleporte-neon" style="margin-top: 10px;">[ 💎 USAR PEDRA DE RETORNO ]</button>
+                    </div>
+
+                    <div id="container-hp-boss" class="boss-hp-container escondido">
+                        <div class="boss-hp-header">
+                            <span>VIDA DO CHEFÃO (HP DO PORTAL):</span>
+                            <span id="boss-hp-texto">100 / 100 HP</span>
+                        </div>
+                        <div class="boss-bar-bg">
+                            <div class="boss-bar-fill" id="boss-hp-fill" style="width: 100%;"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card-painel missoes-card" id="card-painel-missoes">
+                    <div class="card-header">
+                        <h3 id="titulo-missao-card">📋 MISSÃO DIÁRIA DE TREINAMENTO</h3>
+                        <span class="status-missao" id="status-diaria">EM ANDAMENTO</span>
+                    </div>
+
+                    <div class="timer-box" id="caixa-timer-fimdesemana">
+                        ⏳ Tempo restante para o próximo reset diário (00:00): <strong id="timer-reset">00h 00m 00s</strong>
+                    </div>
+
+                    <p class="missao-desc" id="desc-missao-ajuste">Confirme individualmente cada exercício executado (Teto rígido limitado a 2x a meta):</p>
+
+                    <div id="alerta-overtraining" class="alerta-overtraining-box escondido">
+                        ⚠️ <strong>[ALERTA DO SISTEMA - SOBRECARGA MUSCULAR / OVERTRAINING]:</strong> Repetições acima do teto máximo permitido! O valor foi limitado para proteger você de lesões.
+                    </div>
+
+                    <div class="lista-missoes" id="container-missoes"></div>
+
+                    <div class="acoes-missao">
+                        <button type="button" id="btn-executar-treino" class="btn-concluir-verde">[ CONCLUIR TREINO - TODAS AS METAS BATIDAS ]</button>
+                        <button type="button" id="btn-recusar-fimdesemana" class="btn-recusar-roxo escondido">[ ☕ RECUSAR MISSÃO EXTRA (USAR DIA DE DESCANSO) ]</button>
+                        <button type="button" id="btn-nao-cumpri" class="btn-nao-vermelho">[ RELATAR IMPREVISTO OU RECALIBRAR ]</button>
+                        <button type="button" id="btn-usar-pedra-teleporte" class="btn-teleporte-neon escondido">[ 💎 USAR PEDRA DE RETORNO ]</button>
+                    </div>
+                </div>
+
+                <!-- 📆 MISSÕES DA SEMANA -->
+                <div class="card-painel" id="card-semanal">
+                    <div class="card-header"><h3>📆 MISSÕES DA SEMANA</h3><span class="status-missao" id="semanal-status">0/3</span></div>
+                    <div id="semanal-lista"></div>
+                    <p id="semanal-rodape" class="desc-item-mini" style="margin-top:8px;"></p>
+                </div>
+
+                <!-- 🌑 MISSÕES DAS SOMBRAS -->
+                <div class="card-painel escondido" id="card-missoes-sombras" style="border-color:#a855f7;">
+                    <div class="card-header" style="border-bottom-color:#a855f7;"><h3 style="color:#c084fc;">🌑 MISSÕES DAS SOMBRAS</h3></div>
+                    <p class="desc-item-mini" style="margin-bottom:6px;">Suas Sombras pedem volume de exercício acumulado. Sem punição se falhar; a cada 5 missões a Sombra sobe de nível e paga mais.</p>
+                    <div id="lista-missoes-sombras"></div>
+                </div>
+
+                <!-- CHAT -->
+                <div class="card-painel chat-card">
+                    <h3>💬 DIÁLOGO COM O SISTEMA</h3>
+                    <div class="chat-log" id="chat-log">
+                        <div class="msg-sistema">
+                            <strong>[SISTEMA]:</strong> Versão 32 ativa. Novidades: avatares em imagem (masculino e feminino, do Rank E ao Soberano) com molduras quadradas, perda de XP da Zona de Penitência calculada sobre o XP real do treino, e Rupturas, Fendas e Desafios adaptados ao seu exercício (joelho, banco, crunch) e à sua transição. Da V31: Árvore de Habilidades (50 pontos, 5 ramos), Missões da Semana, marcos de Streak, Boss Eco depois do Morghul, Ruptura Carmesim, Modo Recuperação para lesão ou doença, Missões das Sombras, conjuntos de equipamento, habilidades de título, Estatísticas, Retrospectiva Mensal, Backup do save, avisos dentro do jogo e efeitos visuais novos. Teto de XP dos equipamentos: 60% no total.
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <button type="button" id="btn-desafio-urgente" class="btn-sistema btn-desafio" style="flex:1;">⚡ DESAFIO SUPLEMENTAR</button>
+                        <button type="button" id="btn-ver-conquistas" class="btn-sistema btn-desafio" style="flex:1; border-color:#eab308; color:#eab308;">🏆 CONQUISTAS</button>
+                    </div>
+                </div>
+
+            </section>
+
+        </div>
+
+        <footer>
+            <button type="button" id="btn-abrir-backup" class="btn-reset" style="color:#38bdf8;">💾 Backup</button> |
+            <button type="button" id="btn-reset-perfil" class="btn-reset">🔄 Reiniciar Perfil</button>
+        </footer>
+
+    </div>
+
+    <!-- 🎒 MODAL DA BOLSA UNIFICADA (UTILITÁRIOS + ARSENAL) -->
+    <div id="modal-inventario" class="modal-bg escondido">
+        <div class="modal-box" style="max-width: 560px;">
+            <h3 style="color:#eab308;">🎒 BOLSA DO CAÇADOR</h3>
+            <div class="abas-bolsa">
+                <button type="button" id="aba-consumiveis" class="aba-bolsa ativa" onclick="trocarAbaBolsa('consumiveis')">🧪 UTILITÁRIOS</button>
+                <button type="button" id="aba-arsenal" class="aba-bolsa" onclick="trocarAbaBolsa('arsenal')">⚔️ ARSENAL</button>
+            </div>
+            <div id="filtros-bolsa" class="filtros-bolsa"></div>
+            <div id="lista-itens-inventario" style="max-height: 340px; overflow-y: auto; margin: 12px 0; text-align: left;"></div>
+            <button type="button" id="btn-fechar-inventario" class="btn-sistema btn-nao" style="width: 100%;">[ FECHAR ]</button>
+        </div>
+    </div>
+
+    <!-- 🗡️ MODAL: ESCOLHER ITEM PARA UM SLOT -->
+    <div id="modal-slot-equip" class="modal-bg escondido">
+        <div class="modal-box" style="max-width: 520px;">
+            <h3 id="slot-equip-titulo" style="color:#eab308;">🗡️ SLOT</h3>
+            <div id="slot-equip-atual"></div>
+            <div id="slot-equip-lista" style="max-height: 340px; overflow-y: auto; margin: 12px 0; text-align: left;"></div>
+            <button type="button" id="btn-fechar-slot-equip" class="btn-sistema btn-nao" style="width: 100%;">[ FECHAR ]</button>
+        </div>
+    </div>
+
+    <!-- 🌑 MODAL: GALERIA DAS SOMBRAS -->
+    <div id="modal-galeria-sombras" class="modal-bg escondido">
+        <div class="modal-box galeria-box">
+            <h3 style="color:#c084fc;">🌑 GALERIA DAS SOMBRAS</h3>
+            <p id="galeria-resumo" style="color:#94a3b8; font-size:0.8rem; margin-top:4px;"></p>
+            <div id="galeria-grade" class="galeria-grade"></div>
+            <button type="button" id="btn-fechar-galeria" class="btn-sistema btn-nao" style="width: 100%;">[ FECHAR ]</button>
+        </div>
+    </div>
+
+    <!-- 🖼️ VISUALIZADOR DA CENA (GALERIA) -->
+    <div id="modal-galeria-cena" class="galeria-cena escondido">
+        <div id="galeria-cena-blur" class="galeria-cena-blur"></div>
+        <img id="galeria-cena-img" class="galeria-cena-img" alt="Cena da sombra">
+        <div class="galeria-cena-info">
+            <div id="galeria-cena-nome" class="galeria-cena-nome"></div>
+            <div id="galeria-cena-rank" class="galeria-cena-rank"></div>
+            <div id="galeria-cena-lore" class="galeria-cena-lore"></div>
+            <div id="galeria-cena-efeito" class="galeria-cena-efeito"></div>
+            <div class="galeria-cena-dica">Toque em qualquer lugar para fechar</div>
+        </div>
+    </div>
+
+    <!-- 🏪 MODAL DA LOJA DO SISTEMA -->
+    <div id="modal-loja" class="modal-bg escondido">
+        <div class="modal-box" style="max-width: 520px;">
+            <h3 style="color:#22c55e;">🏪 LOJA DO SISTEMA DE CAÇADORES</h3>
+            <p>Utilize seu Ouro (Gold) para comprar utilitários e equipamentos até a raridade 🟣 Épico:</p>
+            <div id="lista-itens-loja" style="max-height: 340px; overflow-y: auto; margin-bottom: 15px; text-align: left;"></div>
+            <button type="button" id="btn-fechar-loja" class="btn-sistema btn-nao" style="width: 100%;">[ FECHAR LOJA ]</button>
+        </div>
+    </div>
+
+    <!-- 🗺️ MODAL DE MAPA MUNDIAL -->
+    <div id="modal-mapa" class="modal-bg escondido">
+        <div class="modal-box" style="max-width: 600px;">
+            <h3 style="color:#38bdf8;">🌍 MAPA MUNDIAL DE MASMORRAS & REGIÕES</h3>
+            <p>Territórios do multiverso e status de liberação dos Chefes:</p>
+            <div id="lista-mapa-regioes" style="max-height: 350px; overflow-y: auto; margin-bottom: 15px; text-align: left;"></div>
+            <button type="button" id="btn-fechar-mapa" class="btn-sistema btn-nao" style="width: 100%;">[ FECHAR MAPA ]</button>
+        </div>
+    </div>
+
+    <!-- 💎 MODAL DE PEDRA DE RETORNO (NEON DARK) -->
+    <div id="modal-pedra-teleporte" class="modal-bg escondido">
+        <div class="modal-box modal-box-neon">
+            <h3 style="color:#a855f7; font-family:'Orbitron', sans-serif;">💎 [USAR PEDRA DE RETORNO]</h3>
+            <p style="color:#cbd5e1; font-size:0.9rem; margin-top:5px;"><b>O que faz:</b> a Pedra de Retorno congela o Portal do Boss para você não perder XP por não conseguir enfrentá-lo. Escolha o motivo:</p>
+
+            <div class="opcoes-justificativa">
+                <p id="pedra-nota" style="color:#f59e0b; font-size:0.8rem; margin:6px 0;"></p>
+                <button type="button" id="btn-pedra-imprevisto" class="btn-opc-just-neon" onclick="processarPedraTeleporte('imprevisto')">
+                    <strong style="color:#38bdf8;">⏳ Imprevisto no Final de Semana</strong><br>
+                    <small style="color:#94a3b8;">Adia o Portal por 7 dias. Só pode ser usado UMA vez por Boss.</small>
+                </button>
+                <button type="button" class="btn-opc-just-neon" onclick="processarPedraTeleporte('dificil')">
+                    <strong style="color:#f59e0b;">🔥 Metas Muito Elevadas para o Nível Atual</strong><br>
+                    <small style="color:#94a3b8;">Congela o Portal por 30 dias para você treinar e superá-lo no próximo mês.</small>
+                </button>
+            </div>
+            <button type="button" id="btn-cancelar-teleporte" class="btn-sistema btn-nao" style="width: 100%; margin-top: 10px;">[ CANCELAR ]</button>
+        </div>
+    </div>
+
+    <!-- 🏆 MODAL DE GALERIA DE CONQUISTAS -->
+    <div id="modal-conquistas" class="modal-bg escondido">
+        <div class="modal-box" style="max-width: 550px;">
+            <h3 style="color:#eab308;">🏆 GALERIA DE CONQUISTAS DE ELITE</h3>
+            <p>Cumprir feitos no treino garante recompensas exclusivas em XP e Gold:</p>
+            <div id="lista-conquistas-body" style="max-height: 320px; overflow-y: auto; margin-bottom: 15px;"></div>
+            <button type="button" id="btn-fechar-conquistas" class="btn-sistema btn-nao" style="width: 100%;">[ FECHAR ]</button>
+        </div>
+    </div>
+
+    <!-- 🚨 MODAL DE ANIMAÇÃO UP DE RANK -->
+    <div id="modal-rankup" class="modal-bg escondido">
+        <div id="rankup-janela" class="janela-larga-restaurada animar-rankup" style="max-width: 720px; text-align: center;">
+            <h2 id="rankup-titulo" class="titulo-rankup" style="font-family:'Orbitron', sans-serif; color:#00d2ff; margin-bottom:6px;">🚨 [SISTEMA: EVOLUÇÃO DE RANK!] 🚨</h2>
+            <p id="rankup-texto" class="texto-rankup" style="color:#cbd5e1; margin-bottom:15px;">Parabéns, Caçador! Seus limites físicos foram superados.</p>
+
+            <div class="badge-rankup" id="badge-novo-rank" style="display:inline-block; font-size:1.3rem; background:rgba(0,210,255,0.2); border:1px solid #00d2ff; color:#00d2ff; padding:6px 18px; border-radius:6px; font-family:'Orbitron', sans-serif; font-weight:bold; margin-bottom:20px;">RANK D</div>
+
+            <div class="secao-cadastro-bloco">
+                <h4 class="subtitulo-bloco">📋 CHECK-IN DE SAÚDE & BIOMETRIA ATUAL</h4>
+
+                <div class="grid-form-amplo" style="margin-bottom: 12px;">
+                    <div class="form-group-amplo">
+                        <label>Altura atual (cm):</label>
+                        <input type="number" id="up-altura" placeholder="Ex: 178">
+                    </div>
+                    <div class="form-group-amplo">
+                        <label>Peso atual corporal (kg):</label>
+                        <input type="number" step="0.1" id="up-peso" placeholder="Ex: 76.5">
+                    </div>
+                </div>
+
+                <div class="form-group-amplo">
+                    <label>Como avalia sua evolução e recuperação física até aqui?</label>
+                    <select id="up-sensacao" style="background:#091322; border:1px solid #00d2ff; color:#fff; padding:10px; border-radius:6px; font-family:'Rajdhani', sans-serif; font-size:1rem; outline:none; margin-top:4px;">
+                        <option value="Muito Forte e Disposto">🔥 Excelente! Sinto ganho de força e ótima disposição.</option>
+                        <option value="Bem e Constante">💪 Bem! Sinto melhora gradual e boa constância.</option>
+                        <option value="Cansado ou Dolorido">⚠️ Cansado/Dolorido. Preciso tomar cuidado com a recuperação.</option>
+                    </select>
+                </div>
+
+                <button type="button" id="btn-confirmar-checkin" class="btn-despertar-grande" style="margin-top: 15px; padding:10px; font-size:0.95rem;">
+                    [ CONFIRMAR CHECK-IN DE SAÚDE ]
+                </button>
+                <button type="button" id="btn-adiar-reavaliacao" class="btn-sistema escondido" style="margin-top: 10px; width:100%;">[ ADIAR 3 DIAS ]</button>
+            </div>
+
+            <div id="caixa-recomendacao-sistema" class="escondido" style="margin-bottom: 20px; padding: 12px; border-radius: 8px; font-size: 0.9rem; border: 1px solid; text-align: left;">
+                <p id="msg-recomendacao-texto"></p>
+            </div>
+
+            <div id="secao-novas-metas" class="secao-cadastro-bloco escondido">
+                <h4 class="subtitulo-bloco">⚡ NOVOS MÁXIMOS RECOMENDADOS</h4>
+                <div class="grid-form-amplo">
+                    <div class="form-group-amplo"><label>Novo Máx. Flexões:</label><input type="number" id="up-flex"></div>
+                    <div class="form-group-amplo"><label>Novo Máx. Abdominais:</label><input type="number" id="up-abd"></div>
+                    <div class="form-group-amplo"><label>Novo Máx. Agachamentos:</label><input type="number" id="up-agach"></div>
+                    <div class="form-group-amplo"><label id="up-label-cardio">Novo Máx. Corrida (Km):</label><input type="number" step="0.1" id="up-corrida"></div>
+                </div>
+
+                <button type="button" id="btn-salvar-rankup" class="btn-despertar-grande" style="margin-top:20px;">
+                    ⚡ [ ATUALIZAR STATUS E CONTINUAR ] ⚡
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 👑 MODAL DE CONVOCAÇÃO DE SOMBRAS -->
+    <div id="modal-extracao-sombra" class="modal-bg escondido">
+        <!-- ETAPA 1: AVISO DO SISTEMA -->
+        <div id="sombra-aviso" class="modal-box box-sombra-dungeon">
+            <div class="sistema-tag">[ SISTEMA ]</div>
+            <h2 class="titulo-extracao">🌌 CONVOCAÇÃO DE SOMBRA DISPONÍVEL</h2>
+            <p class="texto-extracao">Uma alma poderosa aguarda o seu comando, Soberano.</p>
+            <button type="button" id="btn-erga-se" class="btn-erga-se-fogo">👑 [ CONVOCAR ]</button>
+        </div>
+
+        <!-- ETAPA 2: CENA (ESCURIDÃO + SOMBRA + BALÃO) -->
+        <div id="cena-sombra" class="cena-sombra escondido">
+            <div class="cena-escuridao"></div>
+            <div id="cena-fundo-blur" class="cena-fundo-blur"></div>
+            <div id="cena-fundo" class="cena-fundo"></div>
+            <div class="cena-nevoa n1"></div>
+            <div class="cena-nevoa n2"></div>
+            <div class="cena-tentaculos"></div>
+            <div id="cena-palco" class="cena-palco">
+                <div id="cena-nome" class="cena-nome"></div>
+                <div id="sombra-fala" class="balao-fala"></div>
+                <div id="sombra-img-wrap" class="cena-sombra-img">
+                    <img id="sombra-img" alt="Sombra">
+                    <div id="sombra-emoji-fallback" class="sombra-emoji escondido"></div>
+                </div>
+            </div>
+            <p id="sombra-dica" class="dica-absorver">✨ Clique em qualquer lugar para absorver a sombra...</p>
+        </div>
+    </div>
+
+    <!-- 🚨 ALERTA DE FADIGA 95% -->
+    <div id="modal-fadiga" class="modal-bg escondido">
+        <div class="modal-box modal-box-neon">
+            <h3 style="color:#ef4444; font-family:'Orbitron', sans-serif;">🚨 [SISTEMA: RISCO DE LESÃO]</h3>
+            <p style="color:#cbd5e1; font-size:0.9rem; margin-top:6px;">Sua Fadiga Corporal chegou a <b>95% ou mais</b>. Treinar assim aumenta muito o risco de lesão. Como você está se sentindo?</p>
+            <p id="fadiga-nota-restrita" class="escondido" style="color:#f59e0b; font-size:0.8rem;">Hoje há uma Raid ou Zona de Penitência em andamento: só a opção "Estou bem" está disponível (na Raid você ainda pode usar a Pedra de Retorno).</p>
+            <div class="opcoes-justificativa">
+                <button type="button" class="btn-opc-just-neon" onclick="responderAlertaFadiga('bem')">
+                    <strong style="color:#22c55e;">💪 Estou bem para o próximo treino</strong><br>
+                    <small style="color:#94a3b8;">O treino segue normal, sem travas. Cuidado com a técnica.</small>
+                </button>
+                <button type="button" id="fadiga-opcao-reduzir" class="btn-opc-just-neon" onclick="responderAlertaFadiga('reduzir')">
+                    <strong style="color:#38bdf8;">🛡️ Prefiro reduzir as metas no próximo treino</strong><br>
+                    <small style="color:#94a3b8;">Metas 25% menores só no próximo treino. O XP é proporcional ao que você fizer.</small>
+                </button>
+                <button type="button" id="fadiga-opcao-folga" class="btn-opc-just-neon" onclick="responderAlertaFadiga('folga')">
+                    <strong style="color:#f59e0b;">🛌 Estou com dor / prefiro um dia de folga</strong><br>
+                    <small style="color:#94a3b8;">Folga sem perder XP, Streak mantido, Fadiga −20%. No próximo dia útil as metas sobem 10% (uma vez) e depois voltam ao normal.</small>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 💰 VENDA DE ITEM DE BOSS -->
+    <div id="modal-venda-boss" class="modal-bg escondido">
+        <div class="modal-box modal-box-neon">
+            <h3 style="color:#ef4444; font-family:'Orbitron', sans-serif;">⚠️ VENDER ITEM DE BOSS</h3>
+            <p style="color:#eab308; font-weight:bold; margin-top:6px;" id="venda-boss-nome"></p>
+            <p style="color:#cbd5e1; font-size:0.9rem;" id="venda-boss-valor"></p>
+            <ul id="venda-boss-lista" class="venda-boss-lista"></ul>
+            <button type="button" id="btn-confirmar-venda-boss" class="btn-sistema btn-sim" style="width:100%; margin-top:10px;">[ CONFIRMAR VENDA ]</button>
+            <button type="button" id="btn-cancelar-venda-boss" class="btn-sistema btn-nao" style="width:100%; margin-top:8px;">[ CANCELAR ]</button>
+        </div>
+    </div>
+
+    <!-- 🚨 AVISO PRÉVIO DE BOSS (TELA CHEIA) -->
+    <div id="modal-aviso-boss" class="modal-bg modal-aviso-boss-full escondido">
+        <div class="aviso-boss-conteudo">
+            <div id="aviso-boss-tag" class="aviso-boss-tag">🚨 ALERTA DE RAID IMINENTE 🚨</div>
+            <h1 id="aviso-boss-titulo">👹 CHEFE</h1>
+            <p id="aviso-boss-regiao" class="aviso-boss-regiao"></p>
+            <p id="aviso-boss-prazo" class="aviso-boss-prazo"></p>
+            <ul class="aviso-boss-lista">
+                <li>🛡️ <b>Semana Preparatória (Seg–Qui):</b> volume de treino -25%, mantendo 100% do XP.</li>
+                <li>🛌 <b>Sexta-feira Pré-Raid:</b> descanso obrigatório (-20% de Fadiga).</li>
+                <li>⚔️ <b>Sábado e Domingo:</b> o Portal abre. Chegue 100% recuperado!</li>
+            </ul>
+            <button type="button" id="btn-confirmar-aviso-boss" class="btn-erga-se-fogo" style="max-width:320px;">[ ENTENDIDO ]</button>
+        </div>
+    </div>
+
+    <!-- MODAL DE JUSTIFICATIVA -->
+    <div id="modal-justificativa" class="modal-bg escondido">
+        <div class="modal-box">
+            <h3 style="color:#ef4444;">🚨 [RELATÓRIO DE IMPREVISTO OU RECALIBRAÇÃO]</h3>
+            <p>Selecione a justificativa do seu treino de hoje:</p>
+
+            <div class="opcoes-justificativa">
+                <button type="button" class="btn-opc-just" id="btn-usar-soro" style="border-color:#a855f7; color:#a855f7;">🧪 Usar 1 Soro de Recuperação (Salva o Streak; ganha XP só dos exercícios já confirmados)</button>
+                <button type="button" class="btn-opc-just" onclick="processarJustificativa('pesado')">⚖️ Estava muito pesado! (Streak mantido, sem XP hoje; o próximo treino vem com metas menores e o Sistema pergunta como foi)</button>
+                <button type="button" class="btn-opc-just" onclick="processarJustificativa('preguica')">❌ Não fiz por preguiça / desistência (Perde 50% do XP do treino e o Streak, e entra na Zona de Penitência; as missões da zona liberam no próximo dia útil)</button>
+                <button type="button" class="btn-opc-just" onclick="processarJustificativa('tempo')">⏳ Não tive tempo suficiente (Perde o Streak e não ganha XP, mas não vai para a Zona de Penitência)</button>
+                <button type="button" class="btn-opc-just" id="btn-cancelar-justificativa" style="border-color:#64748b; color:#94a3b8;">↩️ Voltar (toquei sem querer / ainda vou treinar)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: COMO FOI O TREINO? (escada do "estava muito pesado") -->
+    <div id="modal-ajuste-meta" class="modal-bg escondido">
+        <div class="modal-box">
+            <h3 style="color:#38bdf8;">⚖️ [COMO FOI O TREINO DE HOJE?]</h3>
+            <p id="ajuste-meta-texto"></p>
+            <div class="opcoes-justificativa">
+                <button type="button" class="btn-opc-just btn-ajuste-meta" data-resp="pesado" style="border-color:#ef4444; color:#ef4444;">😮‍💨 Ainda muito pesado (reduz mais 10%)</button>
+                <button type="button" class="btn-opc-just btn-ajuste-meta" data-resp="limite" style="border-color:#22c55e; color:#22c55e;">✅ No limite, do jeito certo (mantém as metas)</button>
+                <button type="button" class="btn-opc-just btn-ajuste-meta" data-resp="facil" style="border-color:#38bdf8; color:#38bdf8;">💪 Foi fácil (aumenta 10%)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL RANKS -->
+    <div id="modal-ranks" class="modal-bg escondido">
+        <div class="modal-box">
+            <h3>📊 PROGRESSO E ESCALA DE RANKS</h3>
+            <p>Acompanhe seu XP acumulado e os emblemas de poder:</p>
+            <div class="ranks-lista" id="ranks-lista"></div>
+            <button type="button" id="btn-fechar-ranks" class="btn-sistema btn-nao" style="margin-top: 15px; width: 100%;">[ FECHAR ]</button>
+        </div>
+    </div>
+
+
+    <!-- 💬 MODAL GENÉRICO DO JOGO (substitui alert/confirm do navegador) -->
+    <div id="modal-jogo" class="modal-bg modal-jogo escondido" role="dialog" aria-modal="true">
+        <div class="modal-box modal-box-neon box-jogo">
+            <h3 id="jogo-titulo" class="jogo-titulo"></h3>
+            <div id="jogo-texto" class="jogo-texto"></div>
+            <div id="jogo-botoes" class="jogo-botoes"></div>
+        </div>
+    </div>
+
+    <!-- 💾 BACKUP DO PROGRESSO -->
+    <div id="modal-backup" class="modal-bg modal-backup escondido">
+        <div class="modal-box" style="max-width: 580px; text-align:left;">
+            <h3 style="color:#38bdf8; text-align:center;">💾 BACKUP DO PROGRESSO</h3>
+            <p id="backup-status" class="backup-status"></p>
+
+            <div class="backup-bloco">
+                <h4>📤 Exportar (guardar uma cópia)</h4>
+                <p class="desc-item-mini">Baixa um arquivo .json com todo o seu progresso: Rank, XP, itens, sombras, árvore, histórico. Guarde na nuvem, e-mail ou pen drive. Serve também para jogar em outro aparelho.</p>
+                <div class="backup-botoes">
+                    <button type="button" id="btn-backup-exportar" class="btn-sistema btn-sim">[ ⬇️ BAIXAR SAVE ]</button>
+                    <button type="button" id="btn-backup-copiar" class="btn-sistema">[ 📋 COPIAR CÓDIGO ]</button>
+                </div>
+            </div>
+
+            <div class="backup-bloco">
+                <h4>📥 Importar (restaurar uma cópia)</h4>
+                <p class="desc-item-mini">Escolha o arquivo .json ou cole o código. O save atual vira "save anterior" e pode ser recuperado.</p>
+                <input type="file" id="input-backup-arquivo" accept=".json,application/json" class="backup-arquivo">
+                <textarea id="txt-backup-codigo" class="backup-texto" rows="3" placeholder="Ou cole aqui o código do save..."></textarea>
+                <div class="backup-botoes"><button type="button" id="btn-backup-importar-texto" class="btn-sistema">[ IMPORTAR DO CÓDIGO ]</button></div>
+            </div>
+
+            <div class="backup-bloco">
+                <h4>🕒 Pontos de restauração automáticos</h4>
+                <div id="lista-snapshots"></div>
+            </div>
+
+            <button type="button" id="btn-fechar-backup" class="btn-sistema btn-nao" style="width:100%; margin-top:6px;">[ FECHAR ]</button>
+        </div>
+    </div>
+
+
+    <!-- 🌳 ÁRVORE DE HABILIDADES -->
+    <div id="modal-arvore" class="modal-bg escondido">
+        <div class="modal-box modal-arvore-box">
+            <h3 style="font-family:'Orbitron',sans-serif; color:#22c55e;">🌳 ÁRVORE DE HABILIDADES</h3>
+            <p class="arvore-topo">Pontos disponíveis: <b id="arvore-pontos">0</b> · Gastos: <b id="arvore-gastos">0</b>/50</p>
+            <p class="desc-item-mini" style="margin-bottom:8px;">Ganhe pontos subindo de Rank (3), vencendo Ecos (2), em Semanas Perfeitas (1) e marcos de Streak. Os bônus da árvore têm teto próprio de +20% de XP e nenhum nó reduz a Fadiga diretamente: o corpo só descansa descansando.</p>
+            <div id="arvore-corpo" class="arvore-grade"></div>
+            <p id="arvore-resumo" class="desc-item-mini" style="margin:10px 0;"></p>
+            <div style="display:flex; gap:8px;">
+                <button type="button" id="btn-respec-arvore" class="btn-sistema" style="flex:1; border-color:#f59e0b; color:#f59e0b;">[ 🔄 REDISTRIBUIR ]</button>
+                <button type="button" id="btn-fechar-arvore" class="btn-sistema btn-nao" style="flex:1;">[ FECHAR ]</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 📊 ESTATÍSTICAS -->
+    <div id="modal-stats" class="modal-bg escondido">
+        <div class="modal-box" style="max-width:560px; text-align:left;">
+            <h3 style="font-family:'Orbitron',sans-serif; color:#38bdf8; text-align:center;">📊 ESTATÍSTICAS DO CAÇADOR</h3>
+            <div id="stats-corpo" style="max-height:62vh; overflow-y:auto; margin:10px 0;"></div>
+            <button type="button" id="btn-fechar-stats" class="btn-sistema btn-nao" style="width:100%;">[ FECHAR ]</button>
+        </div>
+    </div>
+
+    <!-- ⚙️ CONFIGURAÇÕES -->
+    <div id="modal-config" class="modal-bg escondido">
+        <div class="modal-box" style="max-width:460px; text-align:left;">
+            <h3 style="font-family:'Orbitron',sans-serif; color:#cbd5e1; text-align:center;">⚙️ CONFIGURAÇÕES</h3>
+            <label class="cfg-linha"><span>🔊 Sons do jogo</span><input type="checkbox" id="cfg-som"></label>
+            <label class="cfg-linha"><span>📳 Vibração (celular)</span><input type="checkbox" id="cfg-vib"></label>
+            <label class="cfg-linha"><span>🎞️ Reduzir movimento e efeitos</span>
+                <select id="cfg-mov"><option value="auto">Automático (segue o aparelho)</option><option value="sim">Sempre reduzido</option><option value="nao">Efeitos completos</option></select></label>
+            <label class="cfg-linha"><span>🔔 Lembrete de treino</span><input type="checkbox" id="cfg-notif"></label>
+            <label class="cfg-linha"><span>⏰ Horário do lembrete</span><input type="time" id="cfg-hora"></label>
+            <p id="cfg-notif-nota" class="desc-item-mini"></p>
+            <button type="button" id="btn-instalar-app" class="btn-inventario" style="border-color:#a855f7; color:#c084fc; margin-top:8px;">[ 📲 INSTALAR NA TELA INICIAL ]</button>
+            <p id="cfg-instalar-nota" class="desc-item-mini"></p>
+            <button type="button" id="btn-aviso-sistema" class="btn-inventario" style="border-color:#38bdf8; color:#38bdf8; margin-top:8px;">[ 🤝 LER O AVISO DO SISTEMA ]</button>
+            <button type="button" id="btn-fechar-config" class="btn-sistema btn-nao" style="width:100%; margin-top:10px;">[ SALVAR E FECHAR ]</button>
+        </div>
+    </div>
+
+    <!-- 🖼️ MOLDURAS -->
+    <div id="modal-variacoes" class="modal-bg escondido">
+        <div class="modal-box" style="max-width:520px; max-height:88vh; overflow-y:auto;">
+            <h3 style="font-family:'Orbitron',sans-serif; color:#2dd4bf;">🧬 VARIAÇÕES DE EXERCÍCIO</h3>
+            <p class="desc-item-mini">Exercícios mais difíceis entram <b>misturados</b> na semana (2 a 3 dias por exercício), trocando só 20% a 30% do volume normal. O Sistema calcula as repetições pela proporção real do seu máximo e ajusta pelo seu feedback. Cada variação dá um pequeno bônus de XP (2% a 5%) e cansa um pouco mais. <b>Dor articular: pause e procure um profissional.</b></p>
+            <div id="variacoes-corpo"></div>
+            <button type="button" id="btn-fechar-variacoes" class="btn-sistema btn-nao" style="width:100%; margin-top:10px;">[ FECHAR ]</button>
+        </div>
+    </div>
+
+    <div id="modal-molduras" class="modal-bg escondido">
+        <div class="modal-box" style="max-width:480px;">
+            <h3 style="font-family:'Orbitron',sans-serif; color:#eab308;">🖼️ AVATAR E MOLDURAS</h3>
+            <div class="avatar-topo">
+                <div id="avatar-previa" class="avatar-quadro grande"></div>
+                <div class="avatar-topo-form">
+                    <label class="desc-item-mini" for="avatar-genero">Gênero do avatar (só visual):</label>
+                    <select id="avatar-genero" class="dropdown-titulo">
+                        <option value="masculino">♂️ Masculino</option>
+                        <option value="feminino">♀️ Feminino</option>
+                        <option value="nao_informar">Prefiro não responder (masculino)</option>
+                    </select>
+                    <button type="button" id="btn-remover-moldura" class="btn-sistema btn-nao" style="width:100%; margin-top:6px;">❌ REMOVER MOLDURA</button>
+                </div>
+            </div>
+            <h4 class="subtitulo-bloco" style="margin-top:12px;">🧍 Aparência</h4>
+            <p class="desc-item-mini">Por padrão o avatar muda sozinho a cada Rank. Você também pode fixar uma aparência já desbloqueada.</p>
+            <div id="avatar-galeria" class="avatar-galeria"></div>
+            <h4 class="subtitulo-bloco" style="margin-top:12px;">🖼️ Molduras</h4>
+            <p class="desc-item-mini">Cosméticas: não dão bônus. Toque para aplicar; toque em "Sem moldura" ou em "Remover" para tirar. Desbloqueie com Ranks, Ecos, Streak, Rupturas Vermelhas e Semanas Perfeitas.</p>
+            <div id="molduras-lista" class="molduras-grade"></div>
+            <button type="button" id="btn-fechar-molduras" class="btn-sistema btn-nao" style="width:100%; margin-top:10px;">[ FECHAR ]</button>
+        </div>
+    </div>
+
+    <!-- 📖 RETROSPECTIVA MENSAL -->
+    <div id="modal-retro" class="modal-bg escondido" style="z-index:20400;">
+        <div class="modal-box" style="max-width:560px; text-align:left;">
+            <h3 id="retro-titulo" style="font-family:'Orbitron',sans-serif; color:#c084fc; text-align:center;">📖 RETROSPECTIVA</h3>
+            <div id="retro-corpo" style="max-height:62vh; overflow-y:auto; margin:10px 0;"></div>
+            <button type="button" id="btn-fechar-retro" class="btn-sistema btn-sim" style="width:100%;">[ SALVAR DIÁRIO E FECHAR ]</button>
+        </div>
+    </div>
+
+    <!-- 🩹 MODO RECUPERAÇÃO -->
+    <div id="modal-recuperacao" class="modal-bg escondido">
+        <div class="modal-box modal-box-neon" style="max-width:480px; text-align:left;">
+            <h3 style="font-family:'Orbitron',sans-serif; color:#22c55e; text-align:center;">🩹 MODO RECUPERAÇÃO</h3>
+            <p class="desc-item-mini" style="margin:8px 0;">Para lesão ou doença de verdade. Enquanto estiver ativo: <b>sem Zona de Penitência</b>, <b>Streak preservado</b>, treino <b>opcional</b> com metas −50% e XP proporcional, sem Raid e sem Ruptura. Ao voltar, 3 treinos com metas reduzidas (−30%, −20%, −10%). Só dá para declarar de novo 7 dias depois. Procure um médico se for sério!</p>
+            <button type="button" class="btn-opc-just-neon btn-rec-opc" data-motivo="lesao" data-dias="3">🤕 Lesão leve — 3 dias</button>
+            <button type="button" class="btn-opc-just-neon btn-rec-opc" data-motivo="lesao" data-dias="7">🦴 Lesão — 7 dias</button>
+            <button type="button" class="btn-opc-just-neon btn-rec-opc" data-motivo="doenca" data-dias="3">🤒 Doença leve — 3 dias</button>
+            <button type="button" class="btn-opc-just-neon btn-rec-opc" data-motivo="doenca" data-dias="7">🏥 Doença — 7 dias</button>
+            <button type="button" id="btn-cancelar-recuperacao" class="btn-sistema btn-nao" style="width:100%; margin-top:10px;">[ CANCELAR ]</button>
+        </div>
+    </div>
+
+    <script src="js/sombras.js"></script>
+    <script src="js/avatares.js"></script>
+    <script src="js/cenas.js"></script>
+    <script src="js/script.js"></script>
+    <!-- Modo desenvolvedor: só carrega no seu computador (localhost / arquivo local). No site publicado o arquivo não existe. -->
+    <script>if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.protocol === 'file:') document.write('<script src="js/dev.js"><\/script>');</script>
+</body>
+</html>
